@@ -1,0 +1,71 @@
+<% if notice.present? %>
+
+<div class="alert alert-success lift">
+    	<p><span class="label label-success">Success!</span></p><br/>
+<p id="notice"><%= notice %></p>
+	</div>
+<% end %>	
+	
+<div class="row lift">
+
+<div class="span7 thumbnail padbox">
+
+
+<%= image_tag @recipe.recipeimg.url(:large), :id=>"img" %>
+
+</div>
+<div class="span4 rightbar padit">
+	
+  <h3> <%= @recipe.name %> </h3>
+
+<h5>  <%= @recipe.source %> </h5>
+
+<%if @recipe.present?%>
+
+<h5>  <%= @recipe.calories %> calories per serving </h5>
+<% end %>
+<p>
+<p><div class="rateit" data-rateit-value="<%= @recipe.rating %>" data-rateit-ispreset="true" data-rateit-readonly="true"></div></p>
+
+<p><strong>This recipe was tagged with</strong>: 
+</p>
+<% @recipe.tags.each_with_index do |headtag, i|%>
+			<%= link_to :action => :index,:tag =>(headtag.name) do %>
+			<span class="btn"><i class="icon-search"></i> <%=headtag %></span>
+			
+		<% end end %>
+</p>
+
+<% if @recipe.tried? %>	
+<p><strong>This recipe has been tried</strong></p>	
+<%end%>	
+<%= link_to 'Back', recipes_path, :class=>" btn" %>
+<%= link_to 'Edit', edit_recipe_path(@recipe), :class=>" btn btn-info" %>
+
+
+</div>
+
+<div class="span4 rightbar padit centre">
+	<%= link_to 'Add another Recipe', new_recipe_path, :class=>"btn btn-success span3 btn-large lift" %>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	var value = 0
+	
+$("#img").rotate({ 
+   bind: 
+     { 
+        click: function(){
+        
+            value +=90;
+            $(this).rotate({ animateTo:value})
+            
+        }
+     } 
+   
+});
+	
+</script>
+

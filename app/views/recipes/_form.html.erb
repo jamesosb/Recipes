@@ -1,0 +1,127 @@
+<%= form_for @recipe , :html => { :multipart => true, :class=>"form-horizontal" } do |f| %>
+
+  <% if @recipe.errors.any? %>
+    <div class="alert alert-error alert-block">
+  <p><span class="label label-important">Important</span></p><br/>
+  <p>
+      <span class="badge badge-important"><%= pluralize(@recipe.errors.count, "error") %> prohibited this recipe from being saved:</span> 
+      </p><br/>
+      <ol>
+      <% @recipe.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %></ol>
+      </div>
+  <% end %>
+
+
+
+
+  <fieldset>
+    <legend></legend>
+    <div class="control-group">
+      <%= f.label :name, :class=>"control-label" %>
+      <div class="controls">
+        <%= f.text_field :name, :class=>"input-xlarge" %>
+        <p class="help-block">Name of the recipe</p>
+      </div></div>
+      <div class="control-group">
+      <%= f.label :source, :class=>"control-label" %>
+      <div class="controls">
+        <%= f.text_field :source, :class=>"input-xlarge" %>
+        <p class="help-block">What's the source? E.g. The Good Food Guide</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :calories, :class=>"control-label" %>
+      <div class="controls">
+        <%= f.text_field :calories, :class=>"input-small" %>
+        <p class="help-block">Number of calories per portion</p>
+      </div>
+    </div>
+     <div class="control-group">
+      <%= f.label :rating, :class=>"control-label" %>
+      <div class="controls">
+      	<%= f.select :rating, options_for_select(['0','1','2','3','4','5'],:selected=>@recipe.rating),{},:class=>"select-xlarge", :id=>"backing2b" %>
+		<div class="rateit" data-rateit-backingfld="#backing2b"></div>
+
+      	<p class="help-block">Rate this recipe out of 5</p>
+      </div>
+     </div>
+     <%if @recipe.recipeimg? %>
+     <div class="control-group">
+     <div class="controls">      	
+      	<%= image_tag @recipe.recipeimg.url(:medium), :class=>"thumbnail" %>
+      	</div></div>
+      	<% end %>
+    <div class="control-group">
+      <%= f.label :RecipeImage, "Upload Recipe Image", :class=>"control-label" %>
+      
+      	<div class="controls">
+      	<%= f.file_field :recipeimg %>
+      </div>
+     </div>
+     
+     <div class="control-group">
+      <%= f.label :tried, 'Tried it?', :class=>"control-label" %>
+      <div class="controls">
+        <%= f.check_box :tried, :class=>"checkbox" %>
+        <p class="help-block">Have you tried the recipe?</p>
+      </div>
+    </div>
+     
+     <div class="control-group">
+      <%= f.label 'Tags', :class=>"control-label" %>
+      	<div class="controls">
+      	<%= f.text_field :tag_list, :class=>"input-xlarge", :id=>"tags" %>
+      	</div>
+     </div>
+     
+     
+  </fieldset>
+
+
+  <div class="form-actions">
+   <%= link_to 'Back', recipes_path, :class=>"btn " %> <%= f.button "Submit", :class=>"btn btn-success" %> <a href="#" class="plswait btn disabled">Submitted please wait...</a> <%= image_tag ("progress.gif"), :id=>"progressloader"%>
+  </div>
+<% end %>
+
+<!-- TEST  -->
+
+
+
+<!-- BUFFER -->
+
+<script type="text/javascript">
+
+        $(document).ready(function() {
+        	
+            $("#tags").tokenInput([
+            	<% if @recipefind.present? %>
+            	<% @recipefind.each_with_index do |tag, index| %>
+                {name: "<%=tag.name%>",id: <%=tag.id%>},
+                <% end end %>
+            ],{
+                prePopulate: [
+                <% for tag in @recipe.tags %> 
+				{name: "<%=tag.name%>", id: <%=tag.id%>},
+				<% end %>
+							]}    
+           			 );
+        });
+   $("#progressloader").hide(); 
+   $(".plswait").hide(); 
+   $('.btn-success').click(function(){
+			$('btn-success', this).attr('disabled', 'disabled')
+			$("#progressloader").show()
+			$(".plswait").show()
+			$(".btn-success").hide();
+	$(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+
+        
+</script>

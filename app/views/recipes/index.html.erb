@@ -1,0 +1,113 @@
+
+<div class="row lift">
+	<div class="span12">
+<% if(params.has_key?(:tag)) %>
+	<% tags = params[:tag].split(/,/)%>
+	<%= link_to recipes_path do %>
+			<span class="btn"><i class="icon-remove-sign"></i></span>
+			
+		<% end %>
+		<% tags.each_with_index do |headtag|%>
+			<%= link_to :action => :index, :tag =>(headtag) do %>
+			<span class="btn"><i class="icon-search"></i> <%=headtag%></span>
+		<% end %>	
+	
+	<%end  end%>
+	
+	
+</div></div>
+
+<div class="row lift">
+	
+<div class="span7">
+
+<div class="visible-desktop">
+<% @recipes.each do |recipe| %>
+<div class="span3 thumbnail padbox">
+	<%if recipe.recipeimg? %>
+	<%= link_to ( image_tag recipe.recipeimg.url(:medium)), recipe %>
+	<% end %>
+<div class="caption">	
+	<h4><%=h recipe.name.titleize %></h4></br>
+    <p><%=h recipe.source.titleize %></p>
+    <p><div class="rateit" data-rateit-value="<%= recipe.rating %>" data-rateit-ispreset="true" data-rateit-readonly="true"></div></p>
+    <p><% for tag in recipe.tags %> 
+	<%= link_to tag.name, { :action => :index, :tag => tag.name } do%>
+		<strong><%=tag.name.titleize%></strong>
+	<% end %><% end %>
+	</p>
+    <%= link_to 'Show', recipe, :class=>"btn " %>
+    <%= link_to 'Edit', edit_recipe_path(recipe), :class=>" btn btn-info" %>
+    <%= link_to 'Delete', recipe, confirm: 'Are you sure?', method: :delete, :class=>"btn btn-danger " %>
+</div></div>
+<% end %>
+</div>
+
+<div class="visible-tablet visible-phone">
+<% @recipes.each do |recipe| %>
+<div class="span3 thumbnail padbox">
+	
+	<%if recipe.recipeimg? %>
+	<%= link_to '#{image_tag recipe.recipeimg.url(:medium)}', recipe %>
+	<% end %>
+	
+<div class="caption">	
+	<h4><%=h link_to '#{recipe.name.titleize}', recipe %></h4></br>
+    <p><%=h link_to '#{recipe.source.titleize}', recipe  %></p>
+    <p><div class="rateit" data-rateit-value="<%= recipe.rating %>" data-rateit-ispreset="true" data-rateit-readonly="true"></div></p>
+    
+</div></div>
+<% end %>
+</div>
+
+</div>
+
+<div class="span4 rightbar padit centre">
+	
+<%= link_to 'New Recipe', new_recipe_path, :class=>"btn btn-success span3 btn-large lift" %>
+
+<div class="lift centre">	
+	<% @tags.each_with_index do |tag, i| %>
+
+<% if(params.has_key?(:tag)) %>
+		  
+		
+		
+			 
+  <%= link_to :action => :index, :tag => ("#{params[:tag]},#{tag.name}") do %>
+    <span class="btn buttonpad tag <%=tag.name%>"><i class="icon-search"></i> <%=tag.name.titleize%> <span class="badge"><%=tag.count%></span></span>
+  
+<%end%>
+  
+<%else%>
+    <%= link_to :action => :index, :tag => tag.name  do %>
+    <span class="btn buttonpad"><i class="icon-search"></i> <%=tag.name.titleize%> <span class="badge"><%=tag.count%></span></span>
+<% end  end %>
+
+ 
+  <% end %>
+	</div>
+</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(
+		function() {
+			
+			
+			$(".tag").hide()
+			<% @recipes.each do |recipe| %>
+			<% for tag in recipe.tags %>
+			$(".<%=tag.name%>").show()
+			
+			<%end%>
+			<%end%>
+			<% if(params.has_key?(:tag)) %>
+			<% tags = params[:tag].split(/,/)%>
+			<% tags.each do |t| %>
+			$(".<%=t%>").hide()
+			<%end end%>
+		}
+);
+	
+</script>
